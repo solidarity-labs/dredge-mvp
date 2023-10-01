@@ -157,35 +157,39 @@ python3 dredge.py co --file config.yaml
 
 ```yaml
 configs:
-  start_date: '2023-01-01'
-  end_date: '2023-06-1'
+  start_date: '2023-09-29'
+  end_date: '2023-09-30'
   destination_folder: 'logs_dredge'
-  output_file: 'dredge'
-  shodan_api_key: '************--------------------------'
-  vt_api_key: '*****************------------------***********'
+  output_file: 'test1'
+  shodan_api_key: '9R6Y860tl9q--------------------------'
+  vt_api_key: '5294a7d0ff16------------------046aa2528dc0a4205'
+
+gcp_configs:
+  enabled: False
+  cred_files: ['logtesting-400610-01c38a5c881c.json']
 
 aws_configs:
-  profiles: ['default']
+  enabled: False
+  profiles: ['demo-env']
   profile_region: 'us-east-1'
   regions: ['us-east-1']
 
   event_history:
     enabled: False
-    threat_hunting: False
   guardduty:
     enabled: False
   lb:
     enabled: False
-    buckets: ['alb-logs-*-test']
+    buckets: ['alb-logs-solidarity-tes']
   waf:
     enabled: False
-    buckets: ['aws-waf-logs-*-test']
+    buckets: ['aws-waf-logs-solidarity-ops']
   vpc_flow_logs:
     enabled: False
-    buckets: ['*-test-vpn-flow-logs']
+    buckets: ['solidarity-ops-vpn-flow-logs']
   cloudtrail:
     enabled: False
-    buckets: ['aws-cloudtrail-logs-*-c8d871e5']
+    buckets: ['aws-cloudtrail-logs-065229260063-c8d871e5']
   custom:
     enabled: False
     buckets: ['']
@@ -194,17 +198,31 @@ aws_configs:
     log_group_names: ['/aws/eks/eks-test/cluster']
 
 github_configs:
-  enabled: True
+  enabled: False
   access_token: ''
-  org_name: []
-  ent_name: ['*-enterprise']
-
-azure_configs:
-  client_id: ''
-  client_secret: ''
+  org_name: ['']
+  ent_name: ['']
 ```
 ---
-## Execution Examples:
+## How to Use: Execution Examples:
+
+### Setting up defaults
+In the utils/constant.py file you can specify:
+- Default AWS Profile
+- Default AWS Region
+- Default output folder
+- Default output file name
+
+```python
+# CLI TEXT
+## DREDGE
+dredge_description = "Dredge Threat Hunting"
+default_profile = 'default'
+default_region = 'us-east-1'
+default_output_folder = 'logs_dump_dredge'
+default_file_name = "cloud_data_dump"
+```
+
 ### :thought_balloon: Cloud Status 
 1. List S3 buckets
 ```bash
