@@ -52,14 +52,17 @@
   - AWS - RDS 
   - AWS - EKS
   - AWS - S3 Buckets, public buckets and public objects
+  - GCP - API Logs
+  - Github - Audit Log
 
 ### :dart: [Threat Hunting](https://github.com/solidarity-labs/dredge#dart-threat-hunting-1)
-  - Identification of default TTPs based on MITRE.
   - IoC (Indicators of Compromise) search.
   - Custom rules creation.
   - Shodan Integration
   - VirusTotal Integration
-  - Timeline creation
+  - AWS API Call Timeline creation
+  - AWS Threat Hunt (IP, IAM User or Access Key Id)
+  - Dangerous AWS API Calls Hunt.
 
 ### :boom: [Incident Response](https://github.com/solidarity-labs/dredge#boom-incident-response-1)
   - AWS - Delete IAM User
@@ -166,7 +169,7 @@ configs:
 
 gcp_configs:
   enabled: False
-  cred_files: ['logtesting-400610-01c38a5c881c.json']
+  cred_files: ['logtesting-.json']
 
 aws_configs:
   enabled: False
