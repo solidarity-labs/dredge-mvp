@@ -17,8 +17,7 @@
 ---
 ### TL;DR
 - It's still a work in progress
-- You can obtain logs from AWS (ALB, WAF, CloudTrail, EventHistory, VPC Flow Logs).
-- You can obtain logs from Github, Kubernetes and more!
+- You can obtain logs from AWS (ALB, WAF, CloudTrail, EventHistory, VPC Flow Logs), GCP, Github, Kubernetes among others.
 - Incident Response: You can disable user access keys, network isolate ec2 instances, make s3 buckets private, among others.
 - Threat Hunting: VirusTotal and Shodan Integration, get attacks from api calls.
 - Cloud Status: You can get tactical data from the cloud tenants, list users, servers, buckets, etc.
