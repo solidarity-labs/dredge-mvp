@@ -8,7 +8,7 @@ configs:
 
 gcp_configs:
   enabled: False
-  cred_files: ['logtesting-400610-01c38a5c881c.json']
+  cred_files: ['logtesting-.json']
 
 aws_configs:
   enabled: False
