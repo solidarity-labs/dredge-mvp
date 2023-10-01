@@ -82,7 +82,7 @@
 pip3 install -r requirements.txt
 ```
 
-3. Use your Cloud Provider credentials: [AWS](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html)
+3. Use your Cloud Provider credentials: [AWS](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html) | [GCP](https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to)
 
 Example with AWS credentials (in the ~/.aws/credentials file).
 
