@@ -71,13 +71,10 @@ class ThreatHunting:
         for ip in  tqdm(ip_address, desc="Processing", unit="item"):
             results.append(self.vt_ip_scan(ip, vt_key))
 
-        data = tabulate(results, headers="firstrow", tablefmt="fancy_grid")
         file_name = f'vt_analysis' 
-        print()
-        print(data)
-        print()
-        reporter = Reporter(data, file_name, True, False, True)
-        reporter.csv_reporter()
+
+        reporter = Reporter(results, file_name, True, False, True)
+        reporter.reporter()
 
 
     def vt_ip_scan(self, ip_address, vt_key):
@@ -215,11 +212,6 @@ class ThreatHunting:
     # AWS
     def get_event_history_alerts(self, session, start_date, end_date, args):
         file_name = 'th_aws_event_history_alerts'
-        if args.csv:
-            flag = 'csv'
-        else:
-            flag = '*'
-
         first = True
         nextToken = ''
         event_history_events = []
@@ -253,27 +245,23 @@ class ThreatHunting:
                         if args.ip:
                             if json_cloudtrail_event['sourceIPAddress'] == args.ip:
                                 event = aws_event_parser(json_cloudtrail_event)
-                                default_hunting_file = f'hunting_ip_{args.ip}'
                                 if event:
                                     print(event)
 
                         elif args.access_key: 
                             if json_cloudtrail_event['userIdentity']['accessKeyId'] == args.access_key:
                                 event = aws_event_parser(json_cloudtrail_event)
-                                default_hunting_file = f'hunting_access_key_{args.access_key}'
                                 if event:
                                     print(event)
 
                         elif args.iam_user:
                             if json_cloudtrail_event['userIdentity']['userName'] == args.iam_user:
                                 event = aws_event_parser(json_cloudtrail_event)
-                                default_hunting_file = f'hunting_iam_user_{args.iam_user}'
                                 if event:
                                     print(event)
 
                         elif args.timeline:
                             event = aws_event_parser(json_cloudtrail_event)
-                            default_hunting_file = f'hunting_timeline'
                             if event:
                                 print(event)
 
@@ -282,7 +270,6 @@ class ThreatHunting:
                                 event = aws_event_parser(json_cloudtrail_event)
                                 event.append(dangerous_api_call_dict[json_cloudtrail_event['eventName']])
                                 headers.append('Security Alert Description')
-                                default_hunting_file = 'dangerous_api_call'
                                 print(event)
 
                             else:
@@ -292,7 +279,7 @@ class ThreatHunting:
 
                         if args.csv:
                             reporter = Reporter(event, file_name)
-                            reporter.csv_reporter()
+                            reporter.aws_csv_reporter()
 
                 except KeyError as e:
                     continue

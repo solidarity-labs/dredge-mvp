@@ -46,7 +46,6 @@ class Reporter:
 
         # Open the CSV file in write mode
         output_file = f'{self.file_name}_{self.default_file_name}_{datetime.now():%Y-%m-%d}.csv'
-        
         with open(output_file, mode='a', newline='') as file:
 
             # Create a CSV writer object
