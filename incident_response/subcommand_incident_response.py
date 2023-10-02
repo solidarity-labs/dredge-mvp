@@ -8,12 +8,12 @@ import utils.constants
 def incident_response_subcommand(args):
     # INCIDENT RESPOND    
     # AWS SUBBPARSER
-    args, session = aws_session_validator(args)
+    session = aws_session_validator(args)
     if args.ir_subcommand == utils.constants.ir_aws_subparser:
         ## 'DISABLE' AWS SUBPARSER
         if args.aws_ir_subcommand == utils.constants.ir_aws_disable_subparser:
 
-            if args.iam_user and not args.access_key:
+            if args.iam_user and not args.access_key and not args.console_login:
                 disable_user_console_login(session,args.iam_user)
                 disable_all_user_access_keys(session, args.user_access_keys)
 
@@ -29,10 +29,10 @@ def incident_response_subcommand(args):
 
             elif args.console_login and args.iam_user:
                 disable_user_console_login(session,args.iam_user)
-
+                            
             elif args.s3_public_access:
                 disable_s3_public_access(session, args.s3_public_access)
-            
+
             elif args.object_public_access and args.bucket:
                 disable_object_public_access(session, args.bucket, args.object_public_access)
 

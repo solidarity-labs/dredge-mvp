@@ -117,7 +117,6 @@ class IAMUser:
             iam.delete_access_key(UserName=iam_user_name, AccessKeyId=access_key_id)
             print(f"- Deleted access key: {access_key_id} for user: {iam_user_name}")
 
-
         # List the attached policies for the user
         attached_policies = iam.list_attached_user_policies(UserName=iam_user_name)
         # Detach each attached policy
@@ -125,6 +124,17 @@ class IAMUser:
             policy_arn = policy['PolicyArn']
             iam.detach_user_policy(UserName=iam_user_name, PolicyArn=policy_arn)
             print(f"- Detached policy: {policy_arn} from user: {iam_user_name}")
+
+        
+        # Delete Login Profile
+        try:
+            iam.delete_login_profile(UserName=iam_user_name)
+            print("* Console access removed for user:", iam_user_name)
+        except iam.exceptions.NoSuchEntityException:
+            print("- User does not have a login profile. Console access removal is not required.")
+        except Exception as e:
+            print("Error removing console access for user:", iam_user_name)
+            print("Error message:", str(e))
 
 
         # Delete the IAM user
@@ -140,11 +150,12 @@ class IAMUser:
         try:
             iam_client.delete_login_profile(UserName=self.user_name)
             print("* Console access removed for user:", self.user_name)
+            
         except iam_client.exceptions.NoSuchEntityException:
             print("- User does not have a login profile. Console access removal is not required.")
         except Exception as e:
-            print("!! Error removing console access for user:", self.user_name)
-            print("!! Error message:", str(e))
+            print("Error removing console access for user:", self.user_name)
+            print("Error message:", str(e))
 
 
     def disable_all_access_key(self, session):

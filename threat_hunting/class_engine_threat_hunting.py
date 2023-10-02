@@ -3,8 +3,8 @@ import whois
 import shodan
 import requests
 import json
-import time
 from tqdm import tqdm
+from utils.utils import is_public_ip
 from tabulate import tabulate
 from utils.vars import dangerous_api_call_dict
 from engine.engine_reporter import Reporter
@@ -31,7 +31,9 @@ class ThreatHunting:
                 ip_list = re.findall(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', contents)
                 sorted_ip_list = sorted(set(ip_list))
                 for ip in sorted_ip_list:
-                    ips.append(ip)
+                    is_public = is_public_ip(ip)
+                    if is_public:
+                        ips.append(ip)
                 return ips
 
         except FileNotFoundError:
@@ -233,7 +235,7 @@ class ThreatHunting:
                 if first:
                     cloudtrail_response = client.lookup_events(
                         StartTime=start_date,
-                        EndTime=end_date,
+                        EndTime=end_date,   
                         MaxResults=50,
                     )
                 else:
@@ -247,28 +249,33 @@ class ThreatHunting:
                 try:
                     for i in cloudtrail_response['Events']:
                         json_cloudtrail_event = json.loads(i['CloudTrailEvent'])
+                        
                         if args.ip:
                             if json_cloudtrail_event['sourceIPAddress'] == args.ip:
                                 event = aws_event_parser(json_cloudtrail_event)
                                 default_hunting_file = f'hunting_ip_{args.ip}'
-                                print(event)
+                                if event:
+                                    print(event)
 
                         elif args.access_key: 
                             if json_cloudtrail_event['userIdentity']['accessKeyId'] == args.access_key:
                                 event = aws_event_parser(json_cloudtrail_event)
                                 default_hunting_file = f'hunting_access_key_{args.access_key}'
-                                print(event)
+                                if event:
+                                    print(event)
 
-                        elif args.iam_user: 
+                        elif args.iam_user:
                             if json_cloudtrail_event['userIdentity']['userName'] == args.iam_user:
                                 event = aws_event_parser(json_cloudtrail_event)
                                 default_hunting_file = f'hunting_iam_user_{args.iam_user}'
-                                print(event)
+                                if event:
+                                    print(event)
 
                         elif args.timeline:
                             event = aws_event_parser(json_cloudtrail_event)
                             default_hunting_file = f'hunting_timeline'
-                            print(event)
+                            if event:
+                                print(event)
 
                         elif args.dangerous_api_calls:
                             if json_cloudtrail_event['eventName'] in dangerous_api_call_dict.keys():
@@ -288,7 +295,6 @@ class ThreatHunting:
                             reporter.csv_reporter()
 
                 except KeyError as e:
-                    print(e)
                     continue
                 
                 except KeyboardInterrupt as e:
@@ -299,8 +305,6 @@ class ThreatHunting:
             except KeyError as e:
                 break
 
-
-        reporter(data, flag, default_hunting_file)
         return event_history_events
 
 

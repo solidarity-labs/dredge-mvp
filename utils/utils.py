@@ -1,7 +1,16 @@
 import utils.constants
 import botocore
 import boto3
+import ipaddress
 from utils.vars import valid_aws_regions
+
+def is_public_ip(ip_str):
+    try:
+        ip = ipaddress.ip_address(ip_str)
+        return not ip.is_private
+    except ValueError:
+        # Invalid IP address
+        return False
 
 def validate_aws_region(aws_region):
     return aws_region in valid_aws_regions
@@ -61,5 +70,6 @@ def aws_session_validator(args):
         except botocore.exception.ClientError as e:
             print(e)
             exit(1)
+
     except AttributeError as e:
         print(e)

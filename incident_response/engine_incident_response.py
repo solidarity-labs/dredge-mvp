@@ -29,6 +29,7 @@ def disable_user_console_login(session, iam_user_name):
     try:
         user = IAMUser(session, iam_user_name)
         user.remove_login_profile(session)
+
     except Exception as e:
         print(e)
 
